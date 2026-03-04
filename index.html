@@ -1,133 +1,198 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>ShowVerse</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowVerse | Discovery Hub</title>
+    <style>
+        :root {
+            --primary: #e50914;
+            --bg: #0f0f0f;
+            --card-bg: #1c1c1c;
+            --text: #ffffff;
+            --accent: #ff1e1e;
+        }
 
-<style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0f0f0f;
-    color: white;
-}
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
 
-header {
-    background: #141414;
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        /* --- Header & Search --- */
+        header {
+            background: rgba(20, 20, 20, 0.95);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #333;
+        }
 
-header h1 {
-    color: #e50914;
-}
+        header h1 {
+            color: var(--primary);
+            margin: 0;
+            letter-spacing: 1px;
+            font-size: 1.8rem;
+        }
 
-header input {
-    padding: 8px;
-    border-radius: 5px;
-    border: none;
-    width: 250px;
-}
+        .search-container {
+            position: relative;
+        }
 
-section {
-    padding: 25px 30px;
-}
+        header input {
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid #444;
+            background: #2b2b2b;
+            color: white;
+            width: 300px;
+            transition: 0.3s;
+        }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 180px);
-    gap: 15px;
-}
+        header input:focus {
+            outline: none;
+            border-color: var(--primary);
+            width: 350px;
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
+        }
 
-.card {
-    background: #1c1c1c;
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: 0.3s;
-}
+        /* --- Layout --- */
+        section { padding: 2rem 5%; }
+        h2 { border-left: 4px solid var(--primary); padding-left: 15px; margin-bottom: 1.5rem; }
 
-.card:hover {
-    transform: scale(1.05);
-}
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
 
-.card img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-}
+        /* --- Cards --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
 
-.card h3 {
-    padding: 10px;
-    font-size: 14px;
-}
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
 
-/* Modal */
+        .card img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            display: block;
+        }
 
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    display: none;
-    justify-content: center;
-    align-items: center;
-}
+        .card h3 {
+            padding: 12px;
+            font-size: 0.9rem;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-.modal-box {
-    background: #1c1c1c;
-    width: 400px;
-    padding: 20px;
-    border-radius: 10px;
-}
+        /* --- Modal --- */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
 
-.modal-box img {
-    width: 100%;
-    border-radius: 8px;
-}
+        .modal-box {
+            background: var(--card-bg);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
 
-.close {
-    float: right;
-    cursor: pointer;
-}
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-button {
-    margin-top: 8px;
-    padding: 8px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background: #e50914;
-    color: white;
-}
+        .modal-body { padding: 25px; }
 
-button:hover {
-    background: #ff1e1e;
-}
-</style>
+        .modal-box img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
+            text-shadow: 0 0 5px black;
+            z-index: 10;
+        }
+
+        /* --- Buttons --- */
+        .btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+        
+        button {
+            flex: 1;
+            min-width: 140px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            background: #333;
+            color: white;
+        }
+
+        button.primary { background: var(--primary); }
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        /* Loading Spinner */
+        .loader { text-align: center; padding: 50px; color: #666; font-style: italic; }
+    </style>
 </head>
-
 <body>
 
 <header>
     <h1>ShowVerse</h1>
-    <input id="search" placeholder="Search anime or shows...">
+    <div class="search-container">
+        <input id="search" type="text" placeholder="Press Enter to search...">
+    </div>
 </header>
 
 <section>
     <h2>🔥 Top Anime</h2>
-    <div id="animeGrid" class="grid"></div>
+    <div id="animeGrid" class="grid"><div class="loader">Loading favorites...</div></div>
 </section>
 
 <section>
     <h2>📺 TV Shows</h2>
-    <div id="tvGrid" class="grid"></div>
+    <div id="tvGrid" class="grid"><div class="loader">Loading shows...</div></div>
 </section>
 
-<div id="modal" class="modal">
+<div id="modal" class="modal" onclick="if(event.target === this) closeModal()">
     <div class="modal-box">
-        <span class="close" onclick="closeModal()">✖</span>
+        <span class="close" onclick="closeModal()">&times;</span>
         <div id="modalContent"></div>
     </div>
 </div>
@@ -139,102 +204,107 @@ const modal = document.getElementById("modal");
 const modalContent = document.getElementById("modalContent");
 const searchInput = document.getElementById("search");
 
-async function loadAnime() {
-    const res = await fetch("https://api.jikan.moe/v4/top/anime");
-    const data = await res.json();
-    renderAnime(data.data.slice(0, 12));
+// Helper: Sanitize HTML (TVMaze summary contains tags)
+const cleanHTML = (str) => str ? str.replace(/<\/?[^>]+(>|$)/g, "") : "No description available.";
+
+// API Logic
+async function fetchData(url) {
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Network error");
+        return await res.json();
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
 }
 
-async function loadTV() {
-    const res = await fetch("https://api.tvmaze.com/shows");
-    const data = await res.json();
-    renderTV(data.slice(0, 12));
+async function init() {
+    const animeData = await fetchData("https://api.jikan.moe/v4/top/anime");
+    if(animeData) renderItems(animeData.data.slice(0, 12), animeGrid, 'anime');
+
+    const tvData = await fetchData("https://api.tvmaze.com/shows");
+    if(tvData) renderItems(tvData.slice(0, 12), tvGrid, 'tv');
 }
 
-function renderAnime(list) {
-    animeGrid.innerHTML = "";
+function renderItems(list, container, type) {
+    container.innerHTML = "";
+    if (list.length === 0) {
+        container.innerHTML = "<p>No results found.</p>";
+        return;
+    }
+
     list.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-            <img src="${item.images.jpg.image_url}">
-            <h3>${item.title}</h3>
-        `;
-        card.onclick = () => openModal(
-            item.title,
-            item.images.jpg.image_url,
-            item.synopsis
-        );
-        animeGrid.appendChild(card);
-    });
-}
+        // Normalize data between the two APIs
+        const title = type === 'anime' ? item.title : item.name;
+        const img = type === 'anime' ? item.images.jpg.image_url : (item.image?.medium || 'https://via.placeholder.com/210x295?text=No+Image');
+        const desc = type === 'anime' ? item.synopsis : item.summary;
 
-function renderTV(list) {
-    tvGrid.innerHTML = "";
-    list.forEach(show => {
-        if (!show.image) return;
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-            <img src="${show.image.medium}">
-            <h3>${show.name}</h3>
+            <img src="${img}" alt="${title}" loading="lazy">
+            <h3>${title}</h3>
         `;
-        card.onclick = () => openModal(
-            show.name,
-            show.image.medium,
-            show.summary
-        );
-        tvGrid.appendChild(card);
+        card.onclick = () => openModal(title, img, desc);
+        container.appendChild(card);
     });
 }
 
 function openModal(title, image, description) {
     modal.style.display = "flex";
+    document.body.style.overflow = "hidden"; // Prevent background scroll
+    
     modalContent.innerHTML = `
         <img src="${image}">
-        <h2>${title}</h2>
-        <p>${description || "No description available."}</p>
-        <button onclick="searchPlatform('${title}', 'netflix')">Search on Netflix</button>
-        <button onclick="searchPlatform('${title}', 'prime')">Search on Prime</button>
-        <button onclick="searchPlatform('${title}', 'crunchyroll')">Search on Crunchyroll</button>
+        <div class="modal-body">
+            <h2>${title}</h2>
+            <p>${cleanHTML(description)}</p>
+            <div class="btn-group">
+                <button class="primary" onclick="searchPlatform('${title}', 'netflix')">Netflix</button>
+                <button class="primary" onclick="searchPlatform('${title}', 'prime')">Prime Video</button>
+                <button onclick="searchPlatform('${title}', 'crunchyroll')">Crunchyroll</button>
+                <button onclick="searchPlatform('${title}', 'google')">Google Search</button>
+            </div>
+        </div>
     `;
 }
 
 function closeModal() {
     modal.style.display = "none";
+    document.body.style.overflow = "auto";
 }
 
 function searchPlatform(title, platform) {
-    let url = "";
-    if (platform === "netflix") {
-        url = `https://www.netflix.com/search?q=${title}`;
-    }
-    if (platform === "prime") {
-        url = `https://www.primevideo.com/search/ref=atv_nb_sr?phrase=${title}`;
-    }
-    if (platform === "crunchyroll") {
-        url = `https://www.crunchyroll.com/search?q=${title}`;
-    }
-    window.open(url, "_blank");
+    const queries = {
+        netflix: `https://www.netflix.com/search?q=${title}`,
+        prime: `https://www.primevideo.com/search?phrase=${title}`,
+        crunchyroll: `https://www.crunchyroll.com/search?q=${title}`,
+        google: `https://www.google.com/search?q=watch+${title}+online`
+    };
+    window.open(queries[platform], "_blank");
 }
 
-searchInput.addEventListener("keyup", async (e) => {
+// Search Feature
+searchInput.addEventListener("keypress", async (e) => {
     if (e.key === "Enter") {
-        const q = searchInput.value;
+        const q = searchInput.value.trim();
+        if(!q) return;
 
-        const animeRes = await fetch(`https://api.jikan.moe/v4/anime?q=${q}`);
-        const animeData = await animeRes.json();
-        renderAnime(animeData.data.slice(0, 12));
+        animeGrid.innerHTML = '<div class="loader">Searching Anime...</div>';
+        tvGrid.innerHTML = '<div class="loader">Searching TV...</div>';
 
-        const tvRes = await fetch(`https://api.tvmaze.com/search/shows?q=${q}`);
-        const tvData = await tvRes.json();
-        renderTV(tvData.map(i => i.show).slice(0, 12));
+        const [animeRes, tvRes] = await Promise.all([
+            fetchData(`https://api.jikan.moe/v4/anime?q=${q}`),
+            fetchData(`https://api.tvmaze.com/search/shows?q=${q}`)
+        ]);
+
+        if(animeRes) renderItems(animeRes.data.slice(0, 12), animeGrid, 'anime');
+        if(tvRes) renderItems(tvRes.map(i => i.show).slice(0, 12), tvGrid, 'tv');
     }
 });
 
-loadAnime();
-loadTV();
+init();
 </script>
-
 </body>
 </html>
