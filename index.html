@@ -202,6 +202,10 @@ let watchlist = JSON.parse(localStorage.getItem('showVerse_watchlist')) || [];
 let currentDataPool = [];
 let pageAnime = 1;
 
+const modal = document.getElementById("modal");
+const modalContent = document.getElementById("modalContent");
+const searchInput = document.getElementById("search");
+
 const cleanHTML = (str) => str ? str.replace(/<\/?[^>]+(>|$)/g, "") : "No description available.";
 
 async function fetchData(url) {
