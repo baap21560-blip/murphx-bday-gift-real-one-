@@ -139,15 +139,24 @@
             object-fit: cover;
         }
 
+        /* High Visibility Close Button */
         .close {
             position: absolute;
             top: 15px;
-            right: 20px;
-            font-size: 2rem;
-            cursor: pointer;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            background: rgba(0,0,0,0.7);
             color: white;
-            text-shadow: 0 0 5px black;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
             z-index: 10;
+            font-size: 20px;
+            font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         /* --- Buttons --- */
@@ -168,6 +177,7 @@
 
         button.primary { background: var(--primary); }
         button.random-btn { background: #555; border-radius: 20px; width: auto; flex: none; min-width: 50px;}
+        button.back-btn { background: #444; }
         button:hover { opacity: 0.8; transform: translateY(-2px); }
 
         /* Loading Spinner */
@@ -201,7 +211,7 @@
 
 <div id="modal" class="modal" onclick="if(event.target === this) closeModal()">
     <div class="modal-box">
-        <span class="close" onclick="closeModal()">&times;</span>
+        <span class="close" onclick="closeModal()">✕</span>
         <div id="modalContent"></div>
     </div>
 </div>
@@ -325,10 +335,12 @@ function openModal(title, image, description) {
             <p>${cleanHTML(description)}</p>
             <div class="btn-group">
                 <button class="${isInWatchlist ? '' : 'primary'}" id="watchBtn">${watchBtnText}</button>
-                <div style="width:100%; height:1px; background:#444; margin: 10px 0;"></div>
+                <button class="back-btn" onclick="closeModal()">← Back</button>
+                <div style="width:100%; height:1px; background:#444; margin: 5px 0;"></div>
                 <button onclick="searchPlatform('${title}', 'netflix')">Netflix</button>
                 <button onclick="searchPlatform('${title}', 'prime')">Prime Video</button>
                 <button onclick="searchPlatform('${title}', 'crunchyroll')">Crunchyroll</button>
+                <button onclick="searchPlatform('${title}', 'youtube')">YouTube</button>
                 <button onclick="searchPlatform('${title}', 'google')">Google Search</button>
             </div>
         </div>
@@ -355,6 +367,7 @@ function searchPlatform(title, platform) {
         netflix: `https://www.netflix.com/search?q=${title}`,
         prime: `https://www.primevideo.com/search?phrase=${title}`,
         crunchyroll: `https://www.crunchyroll.com/search?q=${title}`,
+        youtube: `https://www.youtube.com/results?search_query=${title}+full+episodes`,
         google: `https://www.google.com/search?q=watch+${title}+online`
     };
     window.open(queries[platform], "_blank");
