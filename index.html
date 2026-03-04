@@ -268,6 +268,7 @@ function openModal(title, image, description) {
             <p style="color:#ccc; font-size:1.05rem; margin-top:20px;">${cleanHTML(description)}</p>
             <div class="btn-group">
                 <button class="primary" onclick="searchPlatform('${title}', 'netflix')">▶ Play on Netflix</button>
+                <button onclick="searchPlatform('${title}', 'animepahe')">Animepahe</button>
                 <button onclick="toggleWatchlist('${title}', '${image}', \`${description}\`)">
                     ${isInWatchlist ? '✓ In Watchlist' : '+ Add to List'}
                 </button>
@@ -310,8 +311,8 @@ function searchPlatform(title, p) {
     const urls = {
         netflix: `https://www.netflix.com/search?q=${title}`,
         youtube: `https://www.youtube.com/results?search_query=${title}+trailer`,
-        crunchyroll: `https://www.crunchyroll.com/search?q=${title}`
-        animepahe: `https://animepahe.si//search?q=${title}`
+        crunchyroll: `https://www.crunchyroll.com/search?q=${title}`,
+        animepahe: `https://animepahe.ru/anime?search=${title}`
     };
     window.open(urls[p], "_blank");
 }
