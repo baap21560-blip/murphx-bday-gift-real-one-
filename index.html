@@ -7,11 +7,14 @@
     <style>
         :root {
             --primary: #e50914;
-            --bg: #0f0f0f;
-            --card-bg: #1c1c1c;
+            --bg: #050505;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass: rgba(20, 20, 20, 0.7);
             --text: #ffffff;
             --accent: #ff1e1e;
         }
+
+        html { scroll-behavior: smooth; }
 
         body {
             margin: 0;
@@ -19,28 +22,44 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
+            background-image: radial-gradient(circle at top right, #1a0505, transparent);
+            background-attachment: fixed;
         }
 
-        /* --- Header & Search --- */
+        /* --- Glassmorphism Header --- */
         header {
-            background: rgba(20, 20, 20, 0.95);
-            padding: 1rem 5%;
+            background: var(--glass);
+            padding: 0.8rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #333;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        .nav-left { display: flex; align-items: center; gap: 30px; }
 
         header h1 {
             color: var(--primary);
             margin: 0;
             letter-spacing: 1px;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
+            cursor: pointer;
         }
+
+        nav a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        nav a:hover { color: var(--primary); }
 
         .search-container {
             display: flex;
@@ -49,25 +68,32 @@
         }
 
         header input {
-            padding: 10px 15px;
+            padding: 8px 15px;
             border-radius: 20px;
-            border: 1px solid #444;
-            background: #2b2b2b;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
             color: white;
-            width: 250px;
+            width: 200px;
             transition: 0.3s;
         }
 
         header input:focus {
             outline: none;
             border-color: var(--primary);
-            width: 300px;
-            box-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
+            width: 250px;
+            background: rgba(255,255,255,0.15);
         }
 
         /* --- Layout --- */
-        section { padding: 2rem 5%; }
-        h2 { border-left: 4px solid var(--primary); padding-left: 15px; margin-bottom: 1.5rem; }
+        section { padding: 4rem 5% 2rem 5%; }
+        h2 { 
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h2::before { content: ''; width: 4px; height: 24px; background: var(--primary); border-radius: 2px; }
 
         .grid {
             display: grid;
@@ -78,16 +104,17 @@
         /* --- Cards --- */
         .card {
             background: var(--card-bg);
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transform: translateY(-10px);
+            border-color: rgba(229, 9, 20, 0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .card img {
@@ -99,54 +126,57 @@
 
         .card h3 {
             padding: 12px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin: 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-align: center;
         }
 
-        /* --- Modal --- */
+        /* --- Glass Modal --- */
         .modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.8);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 2000;
             padding: 20px;
+            backdrop-filter: blur(5px);
         }
 
         .modal-box {
-            background: var(--card-bg);
-            max-width: 600px;
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            max-width: 700px;
             width: 100%;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow-y: auto;
-            border-radius: 12px;
+            border-radius: 15px;
             position: relative;
-            animation: fadeIn 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-
-        .modal-body { padding: 25px; }
+        .modal-body { padding: 30px; }
 
         .modal-box img {
             width: 100%;
-            height: 300px;
+            height: 350px;
             object-fit: cover;
+            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
         }
 
-        /* High Visibility Close Button */
         .close {
             position: absolute;
             top: 15px;
             right: 15px;
             width: 35px;
             height: 35px;
-            background: rgba(0,0,0,0.7);
+            background: rgba(255,255,255,0.1);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -154,43 +184,51 @@
             align-items: center;
             cursor: pointer;
             z-index: 10;
-            font-size: 20px;
             font-weight: bold;
-            border: 1px solid rgba(255,255,255,0.3);
+            transition: 0.3s;
         }
+        .close:hover { background: var(--primary); }
 
         /* --- Buttons --- */
         .btn-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
         
         button {
             flex: 1;
-            min-width: 140px;
-            padding: 10px;
+            min-width: 120px;
+            padding: 12px;
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
             transition: 0.2s;
-            background: #333;
+            background: rgba(255,255,255,0.1);
             color: white;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        button.primary { background: var(--primary); }
-        button.random-btn { background: #555; border-radius: 20px; width: auto; flex: none; min-width: 50px;}
-        button.back-btn { background: #444; }
-        button:hover { opacity: 0.8; transform: translateY(-2px); }
+        button.primary { background: var(--primary); border: none; }
+        button.random-btn { background: rgba(255,255,255,0.1); border-radius: 50%; width: 40px; height: 40px; flex: none; min-width: auto; padding: 0;}
+        button.back-btn { background: transparent; border: 1px solid #555; }
+        button:hover { transform: translateY(-2px); background: rgba(255,255,255,0.2); }
+        button.primary:hover { opacity: 0.9; background: var(--primary); }
 
-        /* Loading Spinner */
         .loader { text-align: center; padding: 50px; color: #666; font-style: italic; }
     </style>
 </head>
-<body>
+<body id="home">
 
 <header>
-    <h1>ShowVerse</h1>
+    <div class="nav-left">
+        <h1 onclick="window.scrollTo(0,0)">ShowVerse</h1>
+        <nav>
+            <a href="#home">Home</a> &nbsp;&nbsp;
+            <a href="#animeSection">Anime</a> &nbsp;&nbsp;
+            <a href="#tvSection">TV Shows</a>
+        </nav>
+    </div>
     <div class="search-container">
         <button class="random-btn" onclick="surpriseMe()" title="Surprise Me! 🎲">🎲</button>
-        <input id="search" type="text" placeholder="Press Enter to search...">
+        <input id="search" type="text" placeholder="Search titles...">
     </div>
 </header>
 
@@ -199,12 +237,12 @@
     <div id="watchlistGrid" class="grid"></div>
 </section>
 
-<section>
+<section id="animeSection">
     <h2>🔥 Top Anime</h2>
     <div id="animeGrid" class="grid"><div class="loader">Loading favorites...</div></div>
 </section>
 
-<section>
+<section id="tvSection">
     <h2>📺 TV Shows</h2>
     <div id="tvGrid" class="grid"><div class="loader">Loading shows...</div></div>
 </section>
@@ -223,137 +261,96 @@ const modal = document.getElementById("modal");
 const modalContent = document.getElementById("modalContent");
 const searchInput = document.getElementById("search");
 
-// Watchlist State
 let watchlist = JSON.parse(localStorage.getItem('showVerse_watchlist')) || [];
-let currentDataPool = []; // To store loaded data for the randomizer
+let currentDataPool = [];
 
-// Helper: Sanitize HTML (TVMaze summary contains tags)
 const cleanHTML = (str) => str ? str.replace(/<\/?[^>]+(>|$)/g, "") : "No description available.";
 
-// API Logic
 async function fetchData(url) {
     try {
         const res = await fetch(url);
-        if (!res.ok) throw new Error("Network error");
         return await res.json();
     } catch (err) {
-        console.error(err);
         return null;
     }
 }
 
 async function init() {
     renderWatchlist();
-    
     const animeData = await fetchData("https://api.jikan.moe/v4/top/anime");
     if(animeData) {
         renderItems(animeData.data.slice(0, 12), animeGrid, 'anime');
-        // Pool for randomizer
-        animeData.data.forEach(item => currentDataPool.push({
-            title: item.title, 
-            img: item.images.jpg.image_url, 
-            desc: item.synopsis
-        }));
+        animeData.data.forEach(item => currentDataPool.push({title: item.title, img: item.images.jpg.image_url, desc: item.synopsis}));
     }
-
     const tvData = await fetchData("https://api.tvmaze.com/shows");
     if(tvData) {
         renderItems(tvData.slice(0, 12), tvGrid, 'tv');
-        // Pool for randomizer
-        tvData.slice(0, 12).forEach(item => currentDataPool.push({
-            title: item.name, 
-            img: item.image?.medium, 
-            desc: item.summary
-        }));
+        tvData.slice(0, 12).forEach(item => currentDataPool.push({title: item.name, img: item.image?.medium, desc: item.summary}));
     }
 }
 
 function renderItems(list, container, type) {
     container.innerHTML = "";
-    if (list.length === 0) {
-        container.innerHTML = "<p>No results found.</p>";
-        return;
-    }
-
     list.forEach(item => {
         const title = type === 'anime' ? item.title : item.name;
         const img = type === 'anime' ? item.images.jpg.image_url : (item.image?.medium || 'https://via.placeholder.com/210x295?text=No+Image');
         const desc = type === 'anime' ? item.synopsis : item.summary;
-
         const card = document.createElement("div");
         card.className = "card";
-        card.innerHTML = `
-            <img src="${img}" alt="${title}" loading="lazy">
-            <h3>${title}</h3>
-        `;
+        card.innerHTML = `<img src="${img}" alt="${title}"><h3>${title}</h3>`;
         card.onclick = () => openModal(title, img, desc);
         container.appendChild(card);
     });
 }
 
-// Watchlist Logic
 function saveWatchlist() {
     localStorage.setItem('showVerse_watchlist', JSON.stringify(watchlist));
     renderWatchlist();
 }
 
 function renderWatchlist() {
-    const watchlistGrid = document.getElementById("watchlistGrid");
+    const grid = document.getElementById("watchlistGrid");
     const section = document.getElementById("watchlistSection");
-
-    if (watchlist.length === 0) {
-        section.style.display = "none";
-        return;
-    }
-
+    if (watchlist.length === 0) { section.style.display = "none"; return; }
     section.style.display = "block";
-    watchlistGrid.innerHTML = "";
-    
+    grid.innerHTML = "";
     watchlist.forEach(item => {
         const card = document.createElement("div");
         card.className = "card";
-        card.innerHTML = `
-            <img src="${item.img}" alt="${item.title}">
-            <h3>${item.title}</h3>
-        `;
+        card.innerHTML = `<img src="${item.img}"><h3>${item.title}</h3>`;
         card.onclick = () => openModal(item.title, item.img, item.desc);
-        watchlistGrid.appendChild(card);
+        grid.appendChild(card);
     });
 }
 
 function openModal(title, image, description) {
     modal.style.display = "flex";
     document.body.style.overflow = "hidden";
-    
     const isInWatchlist = watchlist.some(i => i.title === title);
-    const watchBtnText = isInWatchlist ? "Remove from Watchlist" : "⭐ Add to Watchlist";
+    const watchBtnText = isInWatchlist ? "Remove" : "⭐ Watchlist";
 
     modalContent.innerHTML = `
         <img src="${image}">
         <div class="modal-body">
-            <h2>${title}</h2>
-            <p>${cleanHTML(description)}</p>
+            <h2 style="border:none; padding:0; margin-top: -50px; position:relative;">${title}</h2>
+            <p style="color:#bbb; font-size:0.95rem;">${cleanHTML(description)}</p>
             <div class="btn-group">
                 <button class="${isInWatchlist ? '' : 'primary'}" id="watchBtn">${watchBtnText}</button>
                 <button class="back-btn" onclick="closeModal()">← Back</button>
-                <div style="width:100%; height:1px; background:#444; margin: 5px 0;"></div>
+                <div style="width:100%; height:1px; background:rgba(255,255,255,0.1); margin: 10px 0;"></div>
                 <button onclick="searchPlatform('${title}', 'netflix')">Netflix</button>
-                <button onclick="searchPlatform('${title}', 'prime')">Prime Video</button>
-                <button onclick="searchPlatform('${title}', 'crunchyroll')">Crunchyroll</button>
                 <button onclick="searchPlatform('${title}', 'youtube')">YouTube</button>
-                <button onclick="searchPlatform('${title}', 'google')">Google Search</button>
+                <button onclick="searchPlatform('${title}', 'crunchyroll')">Crunchyroll</button>
+                <button onclick="searchPlatform('${title}', 'google')">Search</button>
             </div>
         </div>
     `;
 
     document.getElementById('watchBtn').onclick = () => {
-        if (isInWatchlist) {
-            watchlist = watchlist.filter(i => i.title !== title);
-        } else {
-            watchlist.push({ title, img: image, desc: description });
-        }
+        if (isInWatchlist) { watchlist = watchlist.filter(i => i.title !== title); } 
+        else { watchlist.push({ title, img: image, desc: description }); }
         saveWatchlist();
-        openModal(title, image, description); // Refresh modal view
+        openModal(title, image, description);
     };
 }
 
@@ -365,44 +362,31 @@ function closeModal() {
 function searchPlatform(title, platform) {
     const queries = {
         netflix: `https://www.netflix.com/search?q=${title}`,
-        prime: `https://www.primevideo.com/search?phrase=${title}`,
+        youtube: `https://www.youtube.com/results?search_query=${title}+trailer`,
         crunchyroll: `https://www.crunchyroll.com/search?q=${title}`,
-        youtube: `https://www.youtube.com/results?search_query=${title}+full+episodes`,
         google: `https://www.google.com/search?q=watch+${title}+online`
     };
     window.open(queries[platform], "_blank");
 }
 
-// Randomizer Feature
 function surpriseMe() {
     if (currentDataPool.length === 0) return;
     const randomItem = currentDataPool[Math.floor(Math.random() * currentDataPool.length)];
     openModal(randomItem.title, randomItem.img, randomItem.desc);
 }
 
-// Search Feature
 searchInput.addEventListener("keypress", async (e) => {
     if (e.key === "Enter") {
         const q = searchInput.value.trim();
         if(!q) return;
-
-        animeGrid.innerHTML = '<div class="loader">Searching Anime...</div>';
-        tvGrid.innerHTML = '<div class="loader">Searching TV...</div>';
-
-        const [animeRes, tvRes] = await Promise.all([
+        animeGrid.innerHTML = '<div class="loader">Searching...</div>';
+        tvGrid.innerHTML = '<div class="loader">Searching...</div>';
+        const [a, t] = await Promise.all([
             fetchData(`https://api.jikan.moe/v4/anime?q=${q}`),
             fetchData(`https://api.tvmaze.com/search/shows?q=${q}`)
         ]);
-
-        if(animeRes) {
-            renderItems(animeRes.data.slice(0, 12), animeGrid, 'anime');
-            // Update pool for randomizer with search results
-            currentDataPool = animeRes.data.map(i => ({title: i.title, img: i.images.jpg.image_url, desc: i.synopsis}));
-        }
-        if(tvRes) {
-            renderItems(tvRes.map(i => i.show).slice(0, 12), tvGrid, 'tv');
-            tvRes.forEach(i => currentDataPool.push({title: i.show.name, img: i.show.image?.medium, desc: i.show.summary}));
-        }
+        if(a) renderItems(a.data.slice(0, 12), animeGrid, 'anime');
+        if(t) renderItems(t.map(i => i.show).slice(0, 12), tvGrid, 'tv');
     }
 });
 
