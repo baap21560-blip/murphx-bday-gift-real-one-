@@ -308,12 +308,16 @@ function renderWatchlist() {
 function closeModal() { modal.style.display = "none"; document.body.style.overflow = "auto"; }
 
 function searchPlatform(title, p) {
+    const encodedTitle = encodeURIComponent(title);
+
     const urls = {
-        netflix: `https://www.netflix.com/search?q=${title}`,
-        youtube: `https://www.youtube.com/results?search_query=${title}+trailer`,
-        crunchyroll: `https://www.crunchyroll.com/search?q=${title}`,
-        hianime: `https://hianime.to/search?keyword=${title}`
+        netflix: `https://www.netflix.com/search?q=${encodedTitle}`,
+        youtube: `https://www.youtube.com/results?search_query=${encodedTitle}+trailer`,
+        crunchyroll: `https://www.crunchyroll.com/search?q=${encodedTitle}`,
+        hianime: `https://hianime.to/search?keyword=${encodedTitle}`,
+        animekai: `https://animekai.to/search?keyword=${encodedTitle}`
     };
+
     window.open(urls[p], "_blank");
 }
 
