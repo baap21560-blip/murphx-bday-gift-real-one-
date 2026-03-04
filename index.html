@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ShowVerse</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f0f0f;
+    color: white;
+}
+
+header {
+    background: #141414;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    color: #e50914;
+}
+
+header input {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    width: 250px;
+}
+
+section {
+    padding: 25px 30px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 180px);
+    gap: 15px;
+}
+
+.card {
+    background: #1c1c1c;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.card h3 {
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* Modal */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-box {
+    background: #1c1c1c;
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.modal-box img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.close {
+    float: right;
+    cursor: pointer;
+}
+
+button {
+    margin-top: 8px;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: #e50914;
+    color: white;
+}
+
+button:hover {
+    background: #ff1e1e;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>ShowVerse</h1>
+    <input id="search" placeholder="Search anime or shows...">
+</header>
+
+<section>
+    <h2>🔥 Top Anime</h2>
+    <div id="animeGrid" class="grid"></div>
+</section>
+
+<section>
+    <h2>📺 TV Shows</h2>
+    <div id="tvGrid" class="grid"></div>
+</section>
+
+<div id="modal" class="modal">
+    <div class="modal-box">
+        <span class="close" onclick="closeModal()">✖</span>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<script>
+const animeGrid = document.getElementById("animeGrid");
+const tvGrid = document.getElementById("tvGrid");
+const modal = document.getElementById("modal");
+const modalContent = document.getElementById("modalContent");
+const searchInput = document.getElementById("search");
+
+async function loadAnime() {
+    const res = await fetch("https://api.jikan.moe/v4/top/anime");
+    const data = await res.json();
+    renderAnime(data.data.slice(0, 12));
+}
+
+async function loadTV() {
+    const res = await fetch("https://api.tvmaze.com/shows");
+    const data = await res.json();
+    renderTV(data.slice(0, 12));
+}
+
+function renderAnime(list) {
+    animeGrid.innerHTML = "";
+    list.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <img src="${item.images.jpg.image_url}">
+            <h3>${item.title}</h3>
+        `;
+        card.onclick = () => openModal(
+            item.title,
+            item.images.jpg.image_url,
+            item.synopsis
+        );
+        animeGrid.appendChild(card);
+    });
+}
+
+function renderTV(list) {
+    tvGrid.innerHTML = "";
+    list.forEach(show => {
+        if (!show.image) return;
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <img src="${show.image.medium}">
+            <h3>${show.name}</h3>
+        `;
+        card.onclick = () => openModal(
+            show.name,
+            show.image.medium,
+            show.summary
+        );
+        tvGrid.appendChild(card);
+    });
+}
+
+function openModal(title, image, description) {
+    modal.style.display = "flex";
+    modalContent.innerHTML = `
+        <img src="${image}">
+        <h2>${title}</h2>
+        <p>${description || "No description available."}</p>
+        <button onclick="searchPlatform('${title}', 'netflix')">Search on Netflix</button>
+        <button onclick="searchPlatform('${title}', 'prime')">Search on Prime</button>
+        <button onclick="searchPlatform('${title}', 'crunchyroll')">Search on Crunchyroll</button>
+    `;
+}
+
+function closeModal() {
+    modal.style.display = "none";
+}
+
+function searchPlatform(title, platform) {
+    let url = "";
+    if (platform === "netflix") {
+        url = `https://www.netflix.com/search?q=${title}`;
+    }
+    if (platform === "prime") {
+        url = `https://www.primevideo.com/search/ref=atv_nb_sr?phrase=${title}`;
+    }
+    if (platform === "crunchyroll") {
+        url = `https://www.crunchyroll.com/search?q=${title}`;
+    }
+    window.open(url, "_blank");
+}
+
+searchInput.addEventListener("keyup", async (e) => {
+    if (e.key === "Enter") {
+        const q = searchInput.value;
+
+        const animeRes = await fetch(`https://api.jikan.moe/v4/anime?q=${q}`);
+        const animeData = await animeRes.json();
+        renderAnime(animeData.data.slice(0, 12));
+
+        const tvRes = await fetch(`https://api.tvmaze.com/search/shows?q=${q}`);
+        const tvData = await tvRes.json();
+        renderTV(tvData.map(i => i.show).slice(0, 12));
+    }
+});
+
+loadAnime();
+loadTV();
+</script>
+
+</body>
+</html>
