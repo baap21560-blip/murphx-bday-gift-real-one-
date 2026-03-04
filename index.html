@@ -268,7 +268,8 @@ function openModal(title, image, description) {
             <p style="color:#ccc; font-size:1.05rem; margin-top:20px;">${cleanHTML(description)}</p>
             <div class="btn-group">
                 <button class="primary" onclick="searchPlatform('${title}', 'netflix')">▶ Play on Netflix</button>
-                <button onclick="searchPlatform('${title}', 'animepahe')">Hianime</button>
+                <button onclick="searchPlatform('${title}', 'hianime')">HiAnime</button>
+                <button onclick="searchPlatform('${title}', 'animekai')">AnimeKai</button>
                 <button onclick="toggleWatchlist('${title}', '${image}', \`${description}\`)">
                     ${isInWatchlist ? '✓ In Watchlist' : '+ Add to List'}
                 </button>
