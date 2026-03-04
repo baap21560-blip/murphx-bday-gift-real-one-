@@ -43,7 +43,9 @@
         }
 
         .search-container {
-            position: relative;
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         header input {
@@ -52,14 +54,14 @@
             border: 1px solid #444;
             background: #2b2b2b;
             color: white;
-            width: 300px;
+            width: 250px;
             transition: 0.3s;
         }
 
         header input:focus {
             outline: none;
             border-color: var(--primary);
-            width: 350px;
+            width: 300px;
             box-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
         }
 
@@ -165,6 +167,7 @@
         }
 
         button.primary { background: var(--primary); }
+        button.random-btn { background: #555; border-radius: 20px; width: auto; flex: none; min-width: 50px;}
         button:hover { opacity: 0.8; transform: translateY(-2px); }
 
         /* Loading Spinner */
@@ -176,9 +179,15 @@
 <header>
     <h1>ShowVerse</h1>
     <div class="search-container">
+        <button class="random-btn" onclick="surpriseMe()" title="Surprise Me! 🎲">🎲</button>
         <input id="search" type="text" placeholder="Press Enter to search...">
     </div>
 </header>
+
+<section id="watchlistSection" style="display: none;">
+    <h2>⭐ My Watchlist</h2>
+    <div id="watchlistGrid" class="grid"></div>
+</section>
 
 <section>
     <h2>🔥 Top Anime</h2>
@@ -204,6 +213,10 @@ const modal = document.getElementById("modal");
 const modalContent = document.getElementById("modalContent");
 const searchInput = document.getElementById("search");
 
+// Watchlist State
+let watchlist = JSON.parse(localStorage.getItem('showVerse_watchlist')) || [];
+let currentDataPool = []; // To store loaded data for the randomizer
+
 // Helper: Sanitize HTML (TVMaze summary contains tags)
 const cleanHTML = (str) => str ? str.replace(/<\/?[^>]+(>|$)/g, "") : "No description available.";
 
@@ -220,11 +233,29 @@ async function fetchData(url) {
 }
 
 async function init() {
+    renderWatchlist();
+    
     const animeData = await fetchData("https://api.jikan.moe/v4/top/anime");
-    if(animeData) renderItems(animeData.data.slice(0, 12), animeGrid, 'anime');
+    if(animeData) {
+        renderItems(animeData.data.slice(0, 12), animeGrid, 'anime');
+        // Pool for randomizer
+        animeData.data.forEach(item => currentDataPool.push({
+            title: item.title, 
+            img: item.images.jpg.image_url, 
+            desc: item.synopsis
+        }));
+    }
 
     const tvData = await fetchData("https://api.tvmaze.com/shows");
-    if(tvData) renderItems(tvData.slice(0, 12), tvGrid, 'tv');
+    if(tvData) {
+        renderItems(tvData.slice(0, 12), tvGrid, 'tv');
+        // Pool for randomizer
+        tvData.slice(0, 12).forEach(item => currentDataPool.push({
+            title: item.name, 
+            img: item.image?.medium, 
+            desc: item.summary
+        }));
+    }
 }
 
 function renderItems(list, container, type) {
@@ -235,7 +266,6 @@ function renderItems(list, container, type) {
     }
 
     list.forEach(item => {
-        // Normalize data between the two APIs
         const title = type === 'anime' ? item.title : item.name;
         const img = type === 'anime' ? item.images.jpg.image_url : (item.image?.medium || 'https://via.placeholder.com/210x295?text=No+Image');
         const desc = type === 'anime' ? item.synopsis : item.summary;
@@ -251,23 +281,68 @@ function renderItems(list, container, type) {
     });
 }
 
+// Watchlist Logic
+function saveWatchlist() {
+    localStorage.setItem('showVerse_watchlist', JSON.stringify(watchlist));
+    renderWatchlist();
+}
+
+function renderWatchlist() {
+    const watchlistGrid = document.getElementById("watchlistGrid");
+    const section = document.getElementById("watchlistSection");
+
+    if (watchlist.length === 0) {
+        section.style.display = "none";
+        return;
+    }
+
+    section.style.display = "block";
+    watchlistGrid.innerHTML = "";
+    
+    watchlist.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <img src="${item.img}" alt="${item.title}">
+            <h3>${item.title}</h3>
+        `;
+        card.onclick = () => openModal(item.title, item.img, item.desc);
+        watchlistGrid.appendChild(card);
+    });
+}
+
 function openModal(title, image, description) {
     modal.style.display = "flex";
-    document.body.style.overflow = "hidden"; // Prevent background scroll
+    document.body.style.overflow = "hidden";
     
+    const isInWatchlist = watchlist.some(i => i.title === title);
+    const watchBtnText = isInWatchlist ? "Remove from Watchlist" : "⭐ Add to Watchlist";
+
     modalContent.innerHTML = `
         <img src="${image}">
         <div class="modal-body">
             <h2>${title}</h2>
             <p>${cleanHTML(description)}</p>
             <div class="btn-group">
-                <button class="primary" onclick="searchPlatform('${title}', 'netflix')">Netflix</button>
-                <button class="primary" onclick="searchPlatform('${title}', 'prime')">Prime Video</button>
+                <button class="${isInWatchlist ? '' : 'primary'}" id="watchBtn">${watchBtnText}</button>
+                <div style="width:100%; height:1px; background:#444; margin: 10px 0;"></div>
+                <button onclick="searchPlatform('${title}', 'netflix')">Netflix</button>
+                <button onclick="searchPlatform('${title}', 'prime')">Prime Video</button>
                 <button onclick="searchPlatform('${title}', 'crunchyroll')">Crunchyroll</button>
                 <button onclick="searchPlatform('${title}', 'google')">Google Search</button>
             </div>
         </div>
     `;
+
+    document.getElementById('watchBtn').onclick = () => {
+        if (isInWatchlist) {
+            watchlist = watchlist.filter(i => i.title !== title);
+        } else {
+            watchlist.push({ title, img: image, desc: description });
+        }
+        saveWatchlist();
+        openModal(title, image, description); // Refresh modal view
+    };
 }
 
 function closeModal() {
@@ -285,6 +360,13 @@ function searchPlatform(title, platform) {
     window.open(queries[platform], "_blank");
 }
 
+// Randomizer Feature
+function surpriseMe() {
+    if (currentDataPool.length === 0) return;
+    const randomItem = currentDataPool[Math.floor(Math.random() * currentDataPool.length)];
+    openModal(randomItem.title, randomItem.img, randomItem.desc);
+}
+
 // Search Feature
 searchInput.addEventListener("keypress", async (e) => {
     if (e.key === "Enter") {
@@ -299,8 +381,15 @@ searchInput.addEventListener("keypress", async (e) => {
             fetchData(`https://api.tvmaze.com/search/shows?q=${q}`)
         ]);
 
-        if(animeRes) renderItems(animeRes.data.slice(0, 12), animeGrid, 'anime');
-        if(tvRes) renderItems(tvRes.map(i => i.show).slice(0, 12), tvGrid, 'tv');
+        if(animeRes) {
+            renderItems(animeRes.data.slice(0, 12), animeGrid, 'anime');
+            // Update pool for randomizer with search results
+            currentDataPool = animeRes.data.map(i => ({title: i.title, img: i.images.jpg.image_url, desc: i.synopsis}));
+        }
+        if(tvRes) {
+            renderItems(tvRes.map(i => i.show).slice(0, 12), tvGrid, 'tv');
+            tvRes.forEach(i => currentDataPool.push({title: i.show.name, img: i.show.image?.medium, desc: i.show.summary}));
+        }
     }
 });
 
