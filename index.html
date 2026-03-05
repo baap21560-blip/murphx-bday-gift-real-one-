@@ -120,6 +120,12 @@ border-radius:20px;
 border:1px solid rgba(255,255,255,0.1);
 }
 
+.load-more-container{
+display:flex;
+justify-content:center;
+margin-top:25px;
+}
+    
 .hero-content h2{
 font-size:3rem;
 margin:0;
@@ -478,17 +484,21 @@ font-size:0.85rem;
 <section id="animeSection">
     <div class="section-header">
         <h2> Top Anime</h2>
-        <button class="see-more" onclick="loadMore('anime')">See More</button>
     </div>
     <div id="animeGrid" class="grid"><div class="loader">Summoning Anime...</div></div>
+    <div class="load-more-container">
+        <button class="see-more" onclick="loadMore('anime')">See More</button>
+    </div>
 </section>
 
 <section id="tvSection">
     <div class="section-header">
         <h2>TV Shows</h2>
-        <button class="see-more" onclick="loadMore('tv')">See More</button>
     </div>
     <div id="tvGrid" class="grid"><div class="loader">Fetching Shows...</div></div>
+    <div class="load-more-container">
+    <button class="see-more" onclick="loadMore('tv')">See More</button>
+    </div>
 </section>
 
 <div id="modal" class="modal" onclick="if(event.target === this) closeModal()">
