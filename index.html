@@ -1,458 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Murphx | Discovery Hub</title>
-
-<style>
-
-:root {
---primary: #e50914;
---bg: #050505;
---card-bg: rgba(255, 255, 255, 0.05);
---glass: rgba(15, 15, 15, 0.75);
---text: #ffffff;
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-margin:0;
-font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-background:var(--bg);
-color:var(--text);
-line-height:1.6;
-overflow-x:hidden;
-}
-
-/* header */
-
-header{
-background:var(--glass);
-padding:0.8rem 5%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-position:fixed;
-top:0;
-width:100%;
-left:0;
-z-index:1000;
-backdrop-filter:blur(20px);
--webkit-backdrop-filter:blur(20px);
-border-bottom:1px solid rgba(255,255,255,0.1);
-}
-
-.nav-left{
-display:flex;
-flex-direction:column;
-align-items:flex-start;
-gap:10px;
-}
-
-header h1{
-color:var(--primary);
-margin:0;
-font-size:1.8rem;
-cursor:pointer;
-}
-
-nav{
-display:flex;
-gap:20px;
-}
-
-nav a{
-color:#eee;
-text-decoration:none;
-font-size:0.95rem;
-font-weight:500;
-transition:0.3s;
-}
-
-nav a:hover{
-color:var(--primary);
-}
-
-.search-container{
-display:flex;
-gap:15px;
-align-items:center;
-}
-
-header input{
-padding:10px 18px;
-border-radius:30px;
-border:1px solid rgba(255,255,255,0.2);
-background:rgba(255,255,255,0.1);
-color:white;
-width:220px;
-transition:0.3s;
-}
-
-header input:focus{
-outline:none;
-border-color:var(--primary);
-width:280px;
-}
-
-/* hero */
-
-.hero{
-height:80vh;
-width:100%;
-position:relative;
-display:flex;
-align-items:center;
-padding:0 5%;
-background:linear-gradient(to right,#050505 20%,transparent 80%),url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=1350&q=80');
-background-size:cover;
-background-position:center;
-}
-
-.hero-content{
-max-width:600px;
-background:rgba(255,255,255,0.1);
-backdrop-filter:blur(15px);
-padding:40px;
-border-radius:20px;
-border:1px solid rgba(255,255,255,0.1);
-}
-
-.load-more-container{
-display:flex;
-justify-content:center;
-margin-top:25px;
-}
-    
-.hero-content h2{
-font-size:3rem;
-margin:0;
-line-height:1.1;
-}
-
-.hero-content p{
-color:#ccc;
-margin:20px 0;
-font-size:1.1rem;
-}
-
-/* sections */
-
-section{
-padding:3rem 5%;
-}
-
-.section-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-}
-
-h2{
-font-size:1.6rem;
-display:flex;
-align-items:center;
-gap:12px;
-margin:0;
-}
-
-h2::before{
-content:'';
-width:4px;
-height:28px;
-background:var(--primary);
-border-radius:2px;
-}
-
-.card{
-will-change:transform;
-}
-
-.card:hover img{
-transform:scale(1.1);
-}
-
-.card img{
-transition:transform .4s ease;
-}
-    
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-gap:25px;
-}
-
-/* cards */
-
-.card{
-background:var(--card-bg);
-border-radius:12px;
-overflow:hidden;
-cursor:pointer;
-transition:all .4s cubic-bezier(.175,.885,.32,1.275);
-border:1px solid rgba(255,255,255,.05);
-}
-
-.card:hover{
-transform:scale(1.05);
-border-color:var(--primary);
-box-shadow:0 15px 30px rgba(0,0,0,.6);
-}
-
-.card img{
-width:100%;
-aspect-ratio:2/3;
-object-fit:cover;
-}
-
-.card h3{
-padding:12px;
-font-size:.9rem;
-text-align:center;
-margin:0;
-white-space:nowrap;
-overflow:hidden;
-text-overflow:ellipsis;
-}
-
-/* modal */
-
-.modal{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.85);
-display:none;
-justify-content:center;
-align-items:center;
-z-index:2000;
-padding:20px;
-backdrop-filter:blur(8px);
-}
-
-.modal-box{
-background:rgba(25,25,25,.85);
-backdrop-filter:blur(25px);
-max-width:800px;
-width:100%;
-max-height:90vh;
-overflow-y:auto;
-border-radius:20px;
-border:1px solid rgba(255,255,255,.1);
-}
-
-.modal-body{
-padding:40px;
-}
-
-.modal-box img{
-width:100%;
-height:400px;
-object-fit:cover;
-mask-image:linear-gradient(to bottom,black 80%,transparent);
-}
-
-.close{
-position:absolute;
-top:20px;
-right:20px;
-width:40px;
-height:40px;
-background:rgba(255,255,255,.1);
-color:white;
-border-radius:50%;
-display:flex;
-justify-content:center;
-align-items:center;
-cursor:pointer;
-z-index:10;
-font-weight:bold;
-transition:.3s;
-}
-
-.close:hover{
-background:var(--primary);
-}
-
-/* buttons */
-
-.btn-group{
-display:flex;
-flex-wrap:wrap;
-gap:12px;
-margin-top:25px;
-}
-
-button{
-padding:12px 24px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-transition:.3s;
-background:rgba(255,255,255,.1);
-color:white;
-border:1px solid rgba(255,255,255,.1);
-}
-
-button.primary{
-background:var(--primary);
-border:none;
-}
-
-button.see-more{
-background:transparent;
-border:1px solid var(--primary);
-color:var(--primary);
-padding:8px 20px;
-border-radius:20px;
-font-size:.8rem;
-}
-
-button.see-more:hover{
-background:var(--primary);
-color:white;
-}
-
-button:hover{
-transform:translateY(-3px);
-background:rgba(255,255,255,.2);
-}
-
-.loader{
-text-align:center;
-padding:50px;
-color:#666;
-font-style:italic;
-grid-column:1/-1;
-}
-
-/* ========================= */
-/* MOBILE RESPONSIVE FIX */
-/* ========================= */
-
-@media (max-width:768px){
-
-header{
-flex-direction:column;
-align-items:flex-start;
-width:100%;
-padding:15px;
-gap:12px;
-}
-
-.nav-left{
-display:flex;
-flex-direction:column;
-align-items:flex-start;
-gap:8px;
-}
-
-nav{
-display:flex;
-gap:12px;
-flex-wrap:wrap;
-}
-
-.search-container{
-width:100%;
-justify-content:flex-start;
-}
-
-header input{
-width:150px;
-}
-
-header input:focus{
-width:180px;
-}
-
-.hero{
-height:auto;
-padding-top:120px;
-padding-bottom:40px;
-}
-
-.hero-content{
-padding:20px;
-}
-
-.hero-content h2{
-font-size:1.8rem;
-}
-
-.hero-content p{
-font-size:.9rem;
-}
-
-.grid{
-grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-gap:15px;
-}
-
-.modal-box img{
-height:220px;
-}
-
-.modal-body{
-padding:20px;
-}
-
-}
-
-@media (max-width:480px){
-
-header{
-padding:10px 15px;
-}
-
-nav{
-gap:12px;
-font-size:0.85rem;
-}
-
-header input{
-width:130px;
-}
-
-.hero-content h2{
-font-size:1.6rem;
-}
-
-.hero-content p{
-font-size:0.85rem;
-}
-
-img{
-max-width:100%;
-height:auto;
-}
-
-.grid{
-grid-template-columns:repeat(2,1fr);
-gap:12px;
-}
-
-.card h3{
-font-size:0.8rem;
-}
-
-button{
-padding:10px 14px;
-font-size:0.85rem;
-}
-
-}
-
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Murphx | Discovery Hub</title>
+    <style>
+        :root {
+            --primary: #e50914;
+            --primary-hover: #ff1f1f;
+            --bg: #050505;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --glass: rgba(10, 10, 10, 0.8);
+            --text: #ffffff;
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); /* Smoother curve */
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- New Animation Layer --- */
+        
+        /* 1. Shimmer effect for loading */
+        @keyframes shimmer {
+            0% { background-position: -468px 0; }
+            100% { background-position: 468px 0; }
+        }
+
+        /* 2. Entrance Animations */
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Applied classes */
+        .animate-item { 
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0; 
+        }
+
+        /* Smooth Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; transition: 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* --- Header Enhancements --- */
+        header {
+            background: var(--glass);
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: var(--transition);
+        }
+
+        .nav-left h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: var(--transition);
+            text-shadow: 0 0 15px rgba(229, 9, 20, 0.3);
+        }
+
+        .nav-left h1:hover { transform: scale(1.05); filter: brightness(1.2); }
+
+        nav { display: flex; gap: 25px; margin-top: 5px; }
+        nav a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+        }
+        nav a:hover { color: #fff; transform: translateY(-2px); }
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 50%;
+            width: 0; height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+        nav a:hover::after { width: 100%; }
+
+        .search-container input {
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            width: 240px;
+            transition: var(--transition);
+        }
+        .search-container input:focus {
+            width: 320px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary);
+            box-shadow: 0 0 25px rgba(229, 9, 20, 0.4);
+        }
+
+        /* --- Hero Section Enhancements --- */
+        .hero {
+            height: 90vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        #heroBg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center 20%;
+            transition: transform 2s ease, opacity 1s ease-in-out;
+            z-index: -1;
+            filter: brightness(0.5) saturate(1.2);
+            transform: scale(1.1);
+        }
+
+        /* Hero Ken Burns Effect */
+        .hero-active #heroBg { transform: scale(1); }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, #050505 20%, transparent 70%),
+                        linear-gradient(to top, #050505 10%, transparent 40%);
+        }
+
+        .hero-content {
+            max-width: 700px;
+            z-index: 2;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-content.active { opacity: 1; transform: translateX(0); }
+
+        .hero-content h2 { 
+            font-size: 4.5rem; 
+            margin: 10px 0; 
+            font-weight: 800; 
+            line-height: 1; 
+            letter-spacing: -2px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* --- Cards & Grid Enhancements --- */
+        section { 
+            padding: 5rem 5% 2rem; 
+            opacity: 0; 
+            transform: translateY(30px); 
+            transition: opacity 1s ease, transform 1s ease; 
+        }
+        section.visible { opacity: 1; transform: translateY(0); }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transform-style: preserve-3d;
+        }
+
+        .card:hover {
+            transform: translateY(-15px) scale(1.03);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            z-index: 10;
+        }
+
+        .card img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .card:hover img { transform: scale(1.15); filter: brightness(0.8); }
+
+        .card-info {
+            padding: 20px 15px;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 20%, transparent);
+            position: absolute;
+            bottom: 0; width: 100%;
+            transform: translateY(10px);
+            transition: var(--transition);
+        }
+        .card:hover .card-info { transform: translateY(0); }
+        .card-info h3 { margin: 0; font-size: 1rem; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+        /* --- Modal Enhancements --- */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(15px);
+        }
+
+        .modal.open { display: flex; opacity: 1; }
+
+        .modal-box {
+            background: #0a0a0a;
+            width: 95%;
+            max-width: 1100px;
+            border-radius: 30px;
+            overflow: hidden;
+            transform: scale(0.8) translateY(50px);
+            transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+        }
+
+        .modal.open .modal-box { transform: scale(1) translateY(0); }
+
+        .modal-banner {
+            height: 500px;
+            width: 100%;
+            background-size: cover;
+            background-position: center 20%;
+            position: relative;
+        }
+
+        .modal-banner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, #0a0a0a 10%, transparent);
+        }
+
+        /* --- Buttons Enhancements --- */
+        button {
+            padding: 14px 32px;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button.primary { background: var(--primary); color: white; box-shadow: 0 10px 20px rgba(229, 9, 20, 0.2); }
+        button.primary:hover { 
+            background: var(--primary-hover); 
+            transform: scale(1.05) translateY(-3px); 
+            box-shadow: 0 15px 30px rgba(229, 9, 20, 0.4);
+        }
+        button.primary:active { transform: scale(0.98); }
+
+        button.secondary { background: rgba(255,255,255,0.08); color: white; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        button.secondary:hover { background: rgba(255,255,255,0.15); transform: translateY(-3px); }
+
+        @media (max-width: 768px) {
+            .hero-content h2 { font-size: 2.8rem; }
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            header { padding: 1rem 15px; }
+            .search-container input { width: 140px; }
+            .modal-banner { height: 300px; }
+        }
+    </style>
 </head>
+<body class="hero-active">
 
-<body>
-
-<header>
+<header id="mainNav">
     <div class="nav-left">
         <h1 onclick="window.scrollTo(0,0)">MURPHX</h1>
         <nav>
@@ -461,61 +326,73 @@ font-size:0.85rem;
             <a href="#tvSection">TV Shows</a>
         </nav>
     </div>
-    <div class="search-container">
-        <button onclick="surpriseMe()" style="background:transparent; border:none; font-size: 1.5rem; cursor:pointer">🎲</button>
-        <input id="search" type="text" placeholder="Search...">
+    <div class="search-container" style="display:flex; gap:10px;">
+        <input id="search" type="text" placeholder="Search titles...">
+        <button onclick="surpriseMe()" class="secondary" style="padding:10px; border-radius: 50%;">🎲</button>
     </div>
 </header>
 
 <div class="hero">
-    <div class="hero-content">
-        <span style="color:var(--primary); font-weight:bold; letter-spacing: 2px;">TRENDING NOW</span>
-        <h2 id="heroTitle">Loading Title...</h2>
-        <p id="heroDesc">Loading the best content for you today. Explore thousands of movies and anime at your fingertips.</p>
-        <button class="primary" id="heroBtn">View Details</button>
+    <div id="heroBg"></div>
+    <div class="hero-content" id="heroContent">
+        <span style="color:var(--primary); font-weight:bold; letter-spacing: 4px; font-size: 0.75rem; display:block; margin-bottom:10px;">TRENDING NOW</span>
+        <h2 id="heroTitle">Connecting...</h2>
+        <p id="heroDesc" style="color: #bbb; font-size: 1.15rem; margin-bottom: 35px; max-width: 90%;"></p>
+        <div class="btn-group" style="display:flex; gap:15px;">
+            <button class="primary" id="heroBtn">View Details</button>
+            <button class="secondary" onclick="surpriseMe()">Surprise Me</button>
+        </div>
     </div>
 </div>
 
 <section id="watchlistSection" style="display: none;">
-    <div class="section-header"><h2>⭐ My Watchlist</h2></div>
+    <h2>⭐ My Watchlist</h2>
     <div id="watchlistGrid" class="grid"></div>
 </section>
 
 <section id="animeSection">
-    <div class="section-header">
-        <h2> Top Anime</h2>
-    </div>
-    <div id="animeGrid" class="grid"><div class="loader">Summoning Anime...</div></div>
-    <div class="load-more-container">
-        <button class="see-more" onclick="loadMore('anime')">See More</button>
+    <div class="section-header"><h2>Top Anime</h2></div>
+    <div id="animeGrid" class="grid"></div>
+    <div style="text-align:center; margin-top:50px;">
+        <button class="secondary" style="margin:auto" onclick="loadMore('anime')">Explore More Anime</button>
     </div>
 </section>
 
 <section id="tvSection">
-    <div class="section-header">
-        <h2>TV Shows</h2>
-    </div>
-    <div id="tvGrid" class="grid"><div class="loader">Fetching Shows...</div></div>
-    <div class="load-more-container">
-    <button class="see-more" onclick="loadMore('tv')">See More</button>
-    </div>
+    <div class="section-header"><h2>TV Shows</h2></div>
+    <div id="tvGrid" class="grid"></div>
 </section>
 
 <div id="modal" class="modal" onclick="if(event.target === this) closeModal()">
     <div class="modal-box">
-        <span class="close" onclick="closeModal()">✕</span>
-        <div id="modalContent"></div>
+        <div id="modalBanner" class="modal-banner"></div>
+        <div style="padding: 50px; position: relative; margin-top: -120px; z-index: 5;">
+            <h2 id="modalTitle" style="font-size: 3.5rem; margin: 0; border: none; letter-spacing: -2px;"></h2>
+            <p id="modalDesc" style="color: #aaa; margin: 25px 0; max-height: 180px; overflow-y: auto; font-size: 1.1rem; line-height: 1.8;"></p>
+            <div class="btn-group" id="modalButtons" style="display:flex; flex-wrap:wrap; gap:15px;"></div>
+        </div>
+        <button onclick="closeModal()" style="position:absolute; top:25px; right:25px; background:rgba(0,0,0,0.5); border-radius:50%; width:45px; height:45px; justify-content:center; backdrop-filter: blur(10px);">✕</button>
     </div>
 </div>
 
 <script>
-let watchlist = JSON.parse(localStorage.getItem('showVerse_watchlist')) || [];
+let watchlist = JSON.parse(localStorage.getItem('murphx_watchlist')) || [];
 let currentDataPool = [];
 let pageAnime = 1;
 
-const modal = document.getElementById("modal");
-const modalContent = document.getElementById("modalContent");
-const searchInput = document.getElementById("search");
+// Intersection Observer for Scroll Animations
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if(entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Trigger staggered animation for children cards
+            const cards = entry.target.querySelectorAll('.animate-item');
+            cards.forEach((card, i) => {
+                setTimeout(() => card.style.opacity = "1", i * 100);
+            });
+        }
+    });
+}, { threshold: 0.1 });
 
 const cleanHTML = (str) => str ? str.replace(/<\/?[^>]+(>|$)/g, "") : "No description available.";
 
@@ -525,17 +402,10 @@ async function fetchData(url) {
 }
 
 async function init() {
+    document.querySelectorAll('section').forEach(s => observer.observe(s));
     renderWatchlist();
-    await loadMore('anime');
-    await loadMore('tv');
-    
-    // Setup Hero
-    if(currentDataPool.length > 0) {
-        const top = currentDataPool[0];
-        document.getElementById('heroTitle').innerText = top.title;
-        document.getElementById('heroDesc').innerText = cleanHTML(top.desc).slice(0, 150) + "...";
-        document.getElementById('heroBtn').onclick = () => openModal(top.title, top.img, top.desc);
-    }
+    await Promise.all([loadMore('anime'), loadMore('tv')]);
+    updateHero(0);
 }
 
 async function loadMore(type) {
@@ -552,54 +422,93 @@ async function loadMore(type) {
 }
 
 function appendItems(list, container, type) {
-    if(pageAnime === 1 || type === 'tv') container.querySelector('.loader')?.remove();
-    list.forEach(item => {
+    list.forEach((item, index) => {
         const title = type === 'anime' ? item.title : item.name;
         const img = type === 'anime' ? item.images.jpg.large_image_url : (item.image?.original || item.image?.medium);
         const desc = type === 'anime' ? item.synopsis : item.summary;
         
         const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `<img src="${img}"><h3>${title}</h3>`;
+        card.className = "card animate-item";
+        // Inline delay handled by intersection observer for better smoothness
+        card.innerHTML = `<img src="${img}" loading="lazy"><div class="card-info"><h3>${title}</h3></div>`;
         card.onclick = () => openModal(title, img, desc);
         container.appendChild(card);
-        currentDataPool.push({title, img, desc});
+        
+        if(!currentDataPool.find(x => x.title === title)) {
+            currentDataPool.push({title, img, desc});
+        }
     });
 }
 
-function openModal(title, image, description) {
-    modal.style.display = "flex";
-    document.body.style.overflow = "hidden";
-    const isInWatchlist = watchlist.some(i => i.title === title);
+function updateHero(index) {
+    const heroContent = document.getElementById('heroContent');
+    const heroBg = document.getElementById('heroBg');
+    const item = currentDataPool[index];
     
-    modalContent.innerHTML = `
-        <img src="${image}">
-        <div class="modal-body">
-            <h2 style="border:none; margin-top:-60px; position:relative; font-size:2.5rem;">${title}</h2>
-            <p style="color:#ccc; font-size:1.05rem; margin-top:20px;">${cleanHTML(description)}</p>
-            <div class="btn-group">
-                <button class="primary" onclick="searchPlatform('${title}', 'netflix')">▶ Play on Netflix</button>
-                <button onclick="searchPlatform('${title}', 'hianime')">HiAnime</button>
-                <button onclick="searchPlatform('${title}', 'animekai')">AnimeKai</button>
-                <button onclick="toggleWatchlist('${title}', '${image}', \`${description}\`)">
-                    ${isInWatchlist ? '✓ In Watchlist' : '+ Add to List'}
-                </button>
-                <button onclick="closeModal()">← Back</button>
-                <div style="width:100%; height:1px; background:rgba(255,255,255,0.1); margin: 10px 0;"></div>
-                <button onclick="searchPlatform('${title}', 'youtube')">YouTube</button>
-                <button onclick="searchPlatform('${title}', 'crunchyroll')">Crunchyroll</button>
-            </div>
-        </div>
+    if(!item) return;
+
+    // Outgoing animation
+    heroContent.style.opacity = '0';
+    heroContent.style.transform = 'translateX(-30px)';
+    heroBg.style.opacity = '0.3';
+    
+    setTimeout(() => {
+        heroBg.style.backgroundImage = `url(${item.img})`;
+        document.getElementById('heroTitle').innerText = item.title;
+        document.getElementById('heroDesc').innerText = cleanHTML(item.desc).slice(0, 200) + "...";
+        document.getElementById('heroBtn').onclick = () => openModal(item.title, item.img, item.desc);
+        
+        // Incoming animation
+        heroBg.style.opacity = '1';
+        heroContent.style.opacity = '1';
+        heroContent.style.transform = 'translateX(0)';
+        heroContent.classList.add('active');
+    }, 800);
+}
+
+function openModal(title, image, description) {
+    const modal = document.getElementById("modal");
+    modal.style.display = "flex";
+    
+    // Forced reflow to trigger CSS transition
+    modal.offsetHeight; 
+    modal.classList.add('open');
+    document.body.style.overflow = "hidden";
+    
+    document.getElementById('modalBanner').style.backgroundImage = `url(${image})`;
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalDesc').innerText = cleanHTML(description);
+    
+    const isInWatchlist = watchlist.some(i => i.title === title);
+    const btnGroup = document.getElementById('modalButtons');
+    btnGroup.innerHTML = `
+        <button class="primary" onclick="searchPlatform('${title}', 'netflix')">▶ Play on Netflix</button>
+        <button class="secondary" onclick="searchPlatform('${title}', 'crunchyroll')">Crunchyroll</button>
+        <button class="secondary" onclick="toggleWatchlist('${title}', '${image}', \`${description.replace(/`/g, "'")}\`)">
+            ${isInWatchlist ? '✓ In Watchlist' : '+ Add to List'}
+        </button>
     `;
+}
+
+function closeModal() {
+    const modal = document.getElementById("modal");
+    modal.classList.remove('open');
+    setTimeout(() => {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+    }, 400);
 }
 
 function toggleWatchlist(title, image, desc) {
     const idx = watchlist.findIndex(i => i.title === title);
     if(idx > -1) watchlist.splice(idx, 1);
     else watchlist.push({title, img: image, desc});
-    localStorage.setItem('showVerse_watchlist', JSON.stringify(watchlist));
+    
+    localStorage.setItem('murphx_watchlist', JSON.stringify(watchlist));
     renderWatchlist();
-    openModal(title, image, desc);
+    closeModal();
+    // Smooth re-open with updated state
+    setTimeout(() => openModal(title, image, desc), 500);
 }
 
 function renderWatchlist() {
@@ -610,73 +519,58 @@ function renderWatchlist() {
     grid.innerHTML = "";
     watchlist.forEach(item => {
         const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `<img src="${item.img}"><h3>${item.title}</h3>`;
+        card.className = "card animate-item";
+        card.style.opacity = "1";
+        card.innerHTML = `<img src="${item.img}"><div class="card-info"><h3>${item.title}</h3></div>`;
         card.onclick = () => openModal(item.title, item.img, item.desc);
         grid.appendChild(card);
     });
 }
 
-function closeModal() { modal.style.display = "none"; document.body.style.overflow = "auto"; }
-
 function searchPlatform(title, p) {
-    const encodedTitle = encodeURIComponent(title);
-
     const urls = {
-        netflix: `https://www.netflix.com/search?q=${encodedTitle}`,
-        youtube: `https://www.youtube.com/results?search_query=${encodedTitle}+trailer`,
-        crunchyroll: `https://www.crunchyroll.com/search?q=${encodedTitle}`,
-        hianime: `https://hianime.ro/search/${encodedTitle}`,
-        animekai: `https://anikai.to/browser?keyword=${encodedTitle}`
+        netflix: `https://www.netflix.com/search?q=${encodeURIComponent(title)}`,
+        crunchyroll: `https://www.crunchyroll.com/search?q=${encodeURIComponent(title)}`
     };
-
     window.open(urls[p], "_blank");
 }
 
 function surpriseMe() {
     const item = currentDataPool[Math.floor(Math.random() * currentDataPool.length)];
-    openModal(item.title, item.img, item.desc);
+    if(item) openModal(item.title, item.img, item.desc);
 }
 
-searchInput.addEventListener("keypress", async (e) => {
+// Search Logic
+document.getElementById('search').addEventListener("keypress", async (e) => {
     if (e.key === "Enter") {
-        const q = searchInput.value.trim();
-        const [a, t] = await Promise.all([
-            fetchData(`https://api.jikan.moe/v4/anime?q=${q}`),
-            fetchData(`https://api.tvmaze.com/search/shows?q=${q}`)
-        ]);
-        document.getElementById('animeGrid').innerHTML = "";
-        document.getElementById('tvGrid').innerHTML = "";
-        if(a) appendItems(a.data, document.getElementById('animeGrid'), 'anime');
-        if(t) appendItems(t.map(i => i.show), document.getElementById('tvGrid'), 'tv');
+        const q = e.target.value.trim();
+        const a = await fetchData(`https://api.jikan.moe/v4/anime?q=${q}`);
+        const animeGrid = document.getElementById('animeGrid');
+        animeGrid.innerHTML = "";
+        if(a) appendItems(a.data, animeGrid, 'anime');
         window.location.hash = "animeSection";
     }
 });
 
-// HERO AUTO SLIDER
-let heroIndex = 0;
+// Auto Slider
+let heroIdx = 0;
+init().then(() => {
+    setInterval(() => {
+        heroIdx = (heroIdx + 1) % Math.min(currentDataPool.length, 12);
+        updateHero(heroIdx);
+    }, 10000); // 10s for more relaxed viewing
+});
 
-function rotateHero(){
-if(currentDataPool.length === 0) return;
-
-heroIndex++;
-if(heroIndex >= currentDataPool.length){
-heroIndex = 0;
-}
-
-const item = currentDataPool[heroIndex];
-
-document.getElementById('heroTitle').innerText = item.title;
-document.getElementById('heroDesc').innerText =
-cleanHTML(item.desc).slice(0,150) + "...";
-
-document.getElementById('heroBtn').onclick =
-() => openModal(item.title,item.img,item.desc);
-}
-
-    
-init().then(()=>{
-setInterval(rotateHero,6000);
+// Header scroll effect
+window.addEventListener('scroll', () => {
+    const nav = document.getElementById('mainNav');
+    if(window.scrollY > 50) {
+        nav.style.padding = "0.7rem 5%";
+        nav.style.background = "rgba(5, 5, 5, 0.95)";
+    } else {
+        nav.style.padding = "1.2rem 5%";
+        nav.style.background = "var(--glass)";
+    }
 });
 </script>
 </body>
