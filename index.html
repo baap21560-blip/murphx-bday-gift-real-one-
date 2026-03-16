@@ -566,6 +566,8 @@ function openModal(title, image, description) {
                 <div style="width:100%; height:1px; background:rgba(255,255,255,0.1); margin: 10px 0;"></div>
                 <button onclick="searchPlatform('${title}', 'youtube')">YouTube</button>
                 <button onclick="searchPlatform('${title}', 'crunchyroll')">Crunchyroll</button>
+                <button onclick="searchPlatform('${title}', 'cinehd')">CineHD</button>
+
             </div>
         </div>
     `;
@@ -605,6 +607,7 @@ function searchPlatform(title, p) {
         crunchyroll: `https://www.crunchyroll.com/search?q=${encodedTitle}`,
         hianime: `https://hianime.ro/search/${encodedTitle}`,
         animekai: `https://anikai.to/browser?keyword=${encodedTitle}`
+        cinehd: `https://cinehd.cc/search?page=1&q={encodedTitle}`
     };
     window.open(urls[p], "_blank");
 }
